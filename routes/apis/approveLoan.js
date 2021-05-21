@@ -14,8 +14,10 @@ router.get("/", [tokenValidation], async (req, res) => {
       } else {
         Status = "Rejected";
       }
-      await Loan.findOneAndUpdate({ ...req.query._id, status: "Pending" }, { status: "Approved" });
-      return res.status(200).json({ msg: "Request Accepted" });
+      await Loan.findOneAndUpdate({ _id: req.query._id }, { status: Status });
+      const loan = await Loan.findOne({ _id: req.query._id });
+
+      return res.status(200).json(loan);
     } else {
       return res.status(400).json({ msg: "You don't have enough permissions to permfrom this action" });
     }
